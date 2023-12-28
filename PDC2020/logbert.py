@@ -98,20 +98,23 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print("arguments", args)
 
-    if args.mode == 'train':
-        Trainer(options).train()
+    Predictor(options).predict()
 
-    elif args.mode == 'predict':
-        Predictor(options).predict()
 
-    elif args.mode == 'vocab':
-        # extract vocab from train file
-        with open(options["train_vocab"], "r", encoding=args.encoding) as f: 
-            texts = f.readlines()
-        vocab = WordVocab(texts, max_size=args.vocab_size, min_freq=args.min_freq)
-        print("VOCAB SIZE:", len(vocab))
-        print("save vocab in", options["vocab_path"])
-        vocab.save_vocab(options["vocab_path"])
+    # if args.mode == 'train':
+    #     Trainer(options).train()
+
+    # elif args.mode == 'predict':
+    #     Predictor(options).predict()
+
+    # elif args.mode == 'vocab':
+    #     # extract vocab from train file
+    #     with open(options["train_vocab"], "r", encoding=args.encoding) as f: 
+    #         texts = f.readlines()
+    #     vocab = WordVocab(texts, max_size=args.vocab_size, min_freq=args.min_freq)
+    #     print("VOCAB SIZE:", len(vocab))
+    #     print("save vocab in", options["vocab_path"])
+    #     vocab.save_vocab(options["vocab_path"])
 
 
 

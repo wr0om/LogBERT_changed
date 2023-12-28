@@ -61,7 +61,6 @@ class LogDataset(Dataset):
             if prob < self.mask_ratio:
                 # raise AttributeError("no mask in visualization")
 
-                # TODO: CHANGE THIS IF I WANT TO DO THE TASK FOR SINGULAR ACTIVITIES
                 if self.predict_mode:
                     tokens[i] = self.vocab.mask_index
                     output_label.append(self.vocab.stoi.get(token, self.vocab.unk_index))

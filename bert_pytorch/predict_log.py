@@ -32,7 +32,7 @@ def compute_anomaly(results, params, seq_threshold=0.5):
     return total_errors
 
 
-def find_best_threshold(test_normal_results, test_abnormal_results, params, th_range, seq_range):
+def find_best_threshold(test_normal_results, test_abnormal_results, params, th_range, seq_range, path):
     recall_arr = []
     precision_arr = []
     F1_arr = []
@@ -68,7 +68,7 @@ def find_best_threshold(test_normal_results, test_abnormal_results, params, th_r
     plt.legend()
     plt.xlabel("threshold")
     plt.ylabel("measure")
-    plt.savefig("../output/hdfscopy/bert/measures_vs_threshold.png")
+    plt.savefig(path + "/measures_vs_threshold.png")
     plt.show()
 
     return best_result
@@ -153,9 +153,11 @@ class Predictor():
                 log_seqs += log_seq
                 tim_seqs += tim_seq
 
+        #print(f"log_seqs: {log_seqs}")
+
         # sort seq_pairs by seq len
-        log_seqs = np.array(log_seqs)
-        tim_seqs = np.array(tim_seqs)
+        log_seqs = np.array(log_seqs, dtype=object)
+        tim_seqs = np.array(tim_seqs, dtype=object)
 
         test_len = list(map(len, log_seqs))
         test_sort_index = np.argsort(-1 * np.array(test_len))
@@ -315,7 +317,8 @@ class Predictor():
                                                                             test_abnormal_results,
                                                                             params=params,
                                                                             th_range=np.arange(10),
-                                                                            seq_range=np.arange(0,1,0.1))
+                                                                            seq_range=np.arange(0,1,0.1),
+                                                                            path=self.model_dir)
 
         print("best threshold: {}, best threshold ratio: {}".format(best_th, best_seq_th))
         print("TP: {}, TN: {}, FP: {}, FN: {}".format(TP, TN, FP, FN))
