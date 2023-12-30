@@ -15,9 +15,9 @@ from bert_pytorch import Predictor, Trainer
 from bert_pytorch.dataset.utils import seed_everything
 
 options = dict()
-options['device'] = 'cuda' if torch.cuda.is_available() else 'cpu'
+options['device'] = 'cuda:1' if torch.cuda.is_available() else 'cpu'
 options["output_dir"] = "../output/pdc2020/"
-options["model_dir"] = options["output_dir"] + "bert/"
+options["model_dir"] = options["output_dir"] + "bert/" #TODO: CHANGE HERE THE PATH OF MODEL
 options["model_path"] = options["model_dir"] + "best_bert.pth"
 options["train_vocab"] = options["output_dir"] + "train"
 options["vocab_path"] = options["output_dir"] + "vocab.pkl"  # pickle file
@@ -60,7 +60,7 @@ options["adam_beta1"] = 0.9
 options["adam_beta2"] = 0.999
 options["adam_weight_decay"] = 0.00
 options["with_cuda"]= True
-options["cuda_devices"] = None
+options["cuda_devices"] = 'cuda:1'
 options["log_freq"] = None
 
 # predict
@@ -98,23 +98,21 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print("arguments", args)
 
-    Predictor(options).predict()
 
+    if args.mode == 'train':
+        Trainer(options).train()
 
-    # if args.mode == 'train':
-    #     Trainer(options).train()
+    elif args.mode == 'predict':
+        Predictor(options).predict()
 
-    # elif args.mode == 'predict':
-    #     Predictor(options).predict()
-
-    # elif args.mode == 'vocab':
-    #     # extract vocab from train file
-    #     with open(options["train_vocab"], "r", encoding=args.encoding) as f: 
-    #         texts = f.readlines()
-    #     vocab = WordVocab(texts, max_size=args.vocab_size, min_freq=args.min_freq)
-    #     print("VOCAB SIZE:", len(vocab))
-    #     print("save vocab in", options["vocab_path"])
-    #     vocab.save_vocab(options["vocab_path"])
+    elif args.mode == 'vocab':
+        # extract vocab from train file
+        with open(options["train_vocab"], "r", encoding=args.encoding) as f: 
+            texts = f.readlines()
+        vocab = WordVocab(texts, max_size=args.vocab_size, min_freq=args.min_freq)
+        print("VOCAB SIZE:", len(vocab))
+        print("save vocab in", options["vocab_path"])
+        vocab.save_vocab(options["vocab_path"])
 
 
 
